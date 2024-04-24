@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -5,6 +7,8 @@ namespace Difference.Infrastructure.Factories
 {
     public class Factory : IFactory
     {
+        private readonly List<GameObject> loadedPrefabs = new();
+
         public Task<GameObject> CreateAddressable(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
         {
             return Task.FromResult(Object.Instantiate(prefab, position, rotation, parent));
@@ -17,7 +21,13 @@ namespace Difference.Infrastructure.Factories
 
         private GameObject LoadPrefab(string path)
         {
-            return Resources.Load<GameObject>(path);
+            GameObject prefab = loadedPrefabs.Find(p => p.name == Path.GetFileNameWithoutExtension(path));
+            if (prefab == null)
+            {
+                prefab = Resources.Load<GameObject>(path);
+                loadedPrefabs.Add(prefab);
+            }
+            return prefab;
         }
     }
 }
