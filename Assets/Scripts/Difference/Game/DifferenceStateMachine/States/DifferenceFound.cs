@@ -30,14 +30,13 @@ namespace Difference.Game.DifferenceStateMachine.States
 
             SpotPair spotPair = spotHolder.SpotMapping[spotId];
             spotHolder.SpotMapping.Remove(spotId);
+            levelModel.DifferenceCount--;
 
             Transform spot1 = spotPair.DefaultSpot.transform;
             Transform spot2 = spotPair.AdditionalSpot.transform;
 
             factory.CreateResource(DifferencePath.DIFFERENCE_FOUND, spot1.position, Quaternion.identity, spot1);
             factory.CreateResource(DifferencePath.DIFFERENCE_FOUND, spot2.position, Quaternion.identity, spot2);
-
-            levelModel.DifferenceCount--;
         }
 
         public void Exit()
